@@ -85,4 +85,8 @@ sudo apt-get install weewx
  
 * Restart weewx : ```sudo service weewx restart```
 * Check driver wmr500 ```sudo wee_config --list-drivers```
-  
+ 
+### Tips files weewx
+* Config File => /etc/weewx/weewx.conf
+* drivers => /usr/share/weewx/weewx/drivers 
+* drivers user => /usr/share/weewx/user/
