@@ -90,3 +90,4 @@ sudo apt-get install weewx
 * Config File => /etc/weewx/weewx.conf
 * drivers => /usr/share/weewx/weewx/drivers 
 * drivers user => /usr/share/weewx/user/
+* skin => /etc/weewx/skins/
