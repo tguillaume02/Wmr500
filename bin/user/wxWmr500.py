@@ -63,12 +63,26 @@ def _get_as_float(d, s):
         except ValueError as e:
             logerr("cannot read value for '%s': %s" % (s, e))
     return v
+def checkData(d):
+    if d != 240 and d != 210:
+        return d
+    else:
+        return None
 
 def f2c(f):
-    return (f - 32) * (5 / 9)
+    if isinstance(f, (float, int)):
+        return (f - 32) * (5 / 9)
+    else:
+        return None
 
 def f2km(f):
-    return f * 3.6
+    if isinstance(f, (float, int)):
+        return f * 3.6
+    else:
+        return None
+# using to display good format mm
+def mm2cm(f):
+   return f/10
 
 def loader(config_dict, engine):
     return wxWmr500(**config_dict['wxWmr500'])
@@ -160,31 +174,32 @@ class wxWmr500(weewx.drivers.AbstractDevice):
                             packet = {'dateTime': time.time(),
                                       'usUnits': weewx.METRIC,
                                       
-                                      'inTemp': f2c(indoor['w9']['c91']),
-                                      'inHumidity': indoor['w9']['c96'],
-                                      'inDewpoint': f2c(indoor['w9']['c913']),
+                                      'inTemp': f2c(checkData(indoor['w9']['c91'])),
+                                      'inHumidity': checkData(indoor['w9']['c96']),
+                                      'inDewpoint': f2c(checkData(indoor['w9']['c913'])),
                                       
-                                      'outTemp': f2c(outdoor['w3']['c31']),
-                                      'outHumidity': outdoor['w3']['c35'],
-                                      'dewpoint': f2c(outdoor['w3']['c313']),
+                                      'outTemp': f2c(checkData(outdoor['w3']['c31'])),
+                                      'outHumidity': checkData(outdoor['w3']['c35']),
+                                      'dewpoint': f2c(checkData(outdoor['w3']['c313'])),
+                                      'heatindex':f2c(checkData(outdoor['w3']['c39'])),
 
-                                      'pressure': outdoor['w5']['c53'],
+                                      'pressure': checkData(outdoor['w5']['c53']),
 
                                       # Wind direction is a multiple of 18 degrees.  There
                                       # does not appear to be a way to get more accurate a
                                       # reading as it is reported in such a way as the
                                       # display shows wind direction using a circle with
                                       # 18 segments,
-                                      'windSpeed': f2km(outdoor['w2']['c21']),
-                                      'windDir': outdoor['w2']['c23'] * 18,
-                                      'windGust': f2km(outdoor['w2']['c22']),
-                                      'windGustDir': outdoor['w2']['c24'] * 18,
-                                      'windchill': f2c(outdoor['w2']['c26']),
+                                      'windSpeed': f2km(checkData(outdoor['w2']['c21'])),
+                                      'windDir': checkData(outdoor['w2']['c23']) * 22.5,
+                                      'windGust': f2km(checkData(outdoor['w2']['c22'])),
+                                      'windGustDir':checkData( outdoor['w2']['c24']) * 22.5,
+                                      'windchill': f2c(checkData(outdoor['w2']['c26'])),
 
                                       'rain': 0
                                     }
 
-                            rain_mm = Decimal(outdoor['w4']['c41'])
+                            rain_mm = mm2cm(Decimal(outdoor['w4']['c41']))
 
                             if self.rain_mm != Decimal('-1') and rain_mm > self.rain_mm:
                                 #logmsg('rain_mm = ' + str(rain_mm) + ';self.rain_mm = ' + str(self.rain_mm))
