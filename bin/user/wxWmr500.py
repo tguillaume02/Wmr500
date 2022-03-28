@@ -80,6 +80,13 @@ def f2km(f):
         return f * 3.6
     else:
         return None
+
+def f2winddir(f):
+    if isinstance(f, (float, int)):
+        return f * 22.5
+    else:
+        return None
+
 # using to display good format mm
 def mm2cm(f):
    return f/10
@@ -191,9 +198,9 @@ class wxWmr500(weewx.drivers.AbstractDevice):
                                       # display shows wind direction using a circle with
                                       # 18 segments,
                                       'windSpeed': f2km(checkData(outdoor['w2']['c21'])),
-                                      'windDir': checkData(outdoor['w2']['c23']) * 22.5,
+                                      'windDir': f2winddir(checkData(outdoor['w2']['c23'])),
                                       'windGust': f2km(checkData(outdoor['w2']['c22'])),
-                                      'windGustDir':checkData( outdoor['w2']['c24']) * 22.5,
+                                      'windGustDir': f2winddir(checkData( outdoor['w2']['c24'])),
                                       'windchill': f2c(checkData(outdoor['w2']['c26'])),
 
                                       'rain': 0
